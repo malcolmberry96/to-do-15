@@ -3,6 +3,7 @@ var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
+const PORT = process.env.PORT || 4000;
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
@@ -36,6 +37,24 @@ app.use(function(err, req, res, next) {
   // render the error page
   res.status(err.status || 500);
   res.render('error');
+});
+
+const db = require("./models");
+
+db.sequelize.sync().then(function(){
+  app.listen(PORT, function(){
+    console.log(`listening on http://localhost:${PORT}`);
+  });
+});
+
+db.Todo.create({task: "finish project", done: false}).then(function(task){
+  console.log(task);
+});
+db.Todo.create({task: "brush up on github", done: false}).then(function(task){
+  console.log(task);
+});
+db.Todo.create({task: "update mac software", done: false}).then(function(task){
+  console.log(task);
 });
 
 module.exports = app;
